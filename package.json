@@ -1,0 +1,29 @@
+{
+  "name": "fin-ocr-browser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "./add-copyright.sh",
+    "build": "npm i && webpack --mode production",
+    "debug": "npm i && webpack-dev-server --mode development",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Keith Smith <keithsmithccc@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^6.10.0",
+    "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.8.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.90.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "@discoverfinancial/fin-ocr-sdk": "file:../fin-ocr-sdk",
+    "base64-arraybuffer-es6": "^3.1.0"
+  }
+}
