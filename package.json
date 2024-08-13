@@ -1,29 +1,25 @@
 {
   "name": "fin-ocr-browser",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "prebuild": "./add-copyright.sh",
-    "build": "npm i && webpack --mode production",
-    "debug": "npm i && webpack-dev-server --mode development",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "npm i && tsc && vite build",
+    "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "Keith Smith <keithsmithccc@gmail.com>",
-  "license": "ISC",
   "devDependencies": {
-    "css-loader": "^6.10.0",
-    "html-webpack-plugin": "^5.6.0",
-    "mini-css-extract-plugin": "^2.8.0",
-    "ts-loader": "^9.5.1",
-    "typescript": "^5.3.3",
-    "webpack": "^5.90.1",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.9",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.4"
   },
   "dependencies": {
     "@discoverfinancial/fin-ocr-sdk": "file:../fin-ocr-sdk",
-    "base64-arraybuffer-es6": "^3.1.0"
+    "@techstark/opencv-js": "^4.9.0-release.3",
+    "base64-arraybuffer-es6": "^3.1.0",
+    "jimp": "^0.22.10",
+    "tesseract.js": "^4.1.4"
   }
 }
