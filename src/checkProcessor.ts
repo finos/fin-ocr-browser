@@ -36,7 +36,7 @@ export async function scanImage(checkMgr: ocr.CheckMgr, image: cv.Mat): Promise<
     const result: ocr.CheckScanResponse = await checkMgr.scan(scanRequest);
     console.log('Scan request completed.');
 
-    const micrLine = result.translators.tesseract?.result || '';
+    const micrLine = result.translators.opencv?.result || '';
     console.log('MICR line extracted:', micrLine);
 
     // Parse the micrLine to extract details
@@ -52,9 +52,9 @@ export async function scanImage(checkMgr: ocr.CheckMgr, image: cv.Mat): Promise<
   } catch (error) {
     console.error('Error scanning image:', error);
     return {
-      routingNumber: '124003116',
-      accountNumber: '1062296907',
-      checkNumber: '1103'
+      routingNumber: 'Not Found',
+      accountNumber: 'Not Found',
+      checkNumber: 'Not Found'
     };
   }
 }

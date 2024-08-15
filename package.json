@@ -16,7 +16,7 @@
     "vite": "^5.3.4"
   },
   "dependencies": {
-    "@discoverfinancial/fin-ocr-sdk": "file:../fin-ocr-sdk",
+    "@discoverfinancial/fin-ocr-sdk": "*",
     "@techstark/opencv-js": "^4.9.0-release.3",
     "base64-arraybuffer-es6": "^3.1.0",
     "jimp": "^0.22.10",

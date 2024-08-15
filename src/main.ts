@@ -31,6 +31,11 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div class="flex flex-col items-center sm:flex-row">
         <input type="file" id="fileInput" class="mb-4 block w-full rounded border border-gray-300 p-2 sm:mb-0 sm:mr-4 sm:w-auto" />
         <button id="processImageButton" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">Process Image</button>
+        <button id="generateCheckButton" class="ml-4 rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700">Generate Check Image</button>
+      </div>
+      <div id="generatedCheckImageContainer" class="mt-6">
+        <h3 class="mb-2 text-xl font-semibold">Generated Check Image</h3>
+        <img id="generatedCheckImage" src="" alt="Generated Check" class="rounded border border-gray-300 p-2" />
       </div>
       <!-- Output Section -->
       <div id="manualOcrOutput" class="mt-6">
@@ -40,44 +45,8 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       </div>
     </section>
 
-    <!-- Check Scanner Simulation Section -->
-    <section class="rounded-lg bg-slate-100 p-6 shadow-lg">
-      <h2 class="mb-4 text-2xl font-semibold">Check Scanner Simulation</h2>
-      <p class="mb-4">Capture video input from your device's webcam and simulate check scanning behavior.</p>
-      <div class="flex flex-col items-center">
-        <div class="w-full sm:w-2/3">
-          <!-- Video and Canvas Elements -->
-          <div class="flex justify-center">
-              <video id="videoInput" width="640" height="480" class="bg-gray-200 border border-gray-300 rounded-lg" autoplay></video>
-              <canvas id="canvasOutput" width="640" height="480" class="bg-gray-200 border border-gray-300 rounded-lg ml-4"></canvas>
-          </div>
-        </div>
-        <!-- Sliders for Brightness and Contrast -->
-        <div class="mt-4 w-full sm:w-2/3">
-          <div class="flex flex-col items-center justify-center sm:flex-row">
-            <div class="w-full p-2 sm:w-1/2">
-              <label for="brightness" class="block text-center">Brightness:</label>
-              <input type="range" id="brightness" name="brightness" min="-100" max="100" value="0" class="w-full" />
-            </div>
-            <div class="w-full p-2 sm:w-1/2">
-              <label for="contrast" class="block text-center">Contrast:</label>
-              <input type="range" id="contrast" name="contrast" min="-100" max="100" value="0" class="w-full" />
-            </div>
-          </div>
-        </div>
-        <!-- Buttons for Reset and Run OCR -->
-        <div class="mt-4 flex w-full justify-center sm:w-2/3">
-          <button id="resetButton" class="mx-2 rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700">Reset</button>
-          <button id="ocrButton" class="mx-2 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">Run OCR</button>
-        </div>
-      </div>
-      <!-- Output Section -->
-      <div id="output" class="mt-6">
-        <p><strong>Routing Number:</strong> <span id="routingNumber">N/A</span></p>
-        <p><strong>Account Number:</strong> <span id="accountNumber">N/A</span></p>
-        <p><strong>Check Number:</strong> <span id="checkNumber">N/A</span></p>
-      </div>
-    </section>
+
+
   </main>
 
   <footer class="mt-8 bg-gray-800 py-4 text-white">
@@ -399,15 +368,35 @@ function displayCheckDetails(details: CheckDetails) {
 
 const fileInput = document.getElementById('fileInput') as HTMLInputElement;
 const processImageButton = document.getElementById('processImageButton') as HTMLButtonElement;
+let generatedCheckImageUrl: string = '';
 processImageButton.addEventListener('click', async () => {
   const file = fileInput.files?.[0];
-  if (!file) {
-    alert('Please select an image file.');
-    return;
-  }
+  let mat: cv.Mat;
 
-  const reader = new FileReader();
-  reader.onload = async function(event) {
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = async function(event) {
+      const img = new Image();
+      img.onload = async function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0);
+
+        const imageData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
+        mat = cv.matFromImageData(imageData!);
+        try {
+          const checkDetails = await scanImage(checkMgr, mat);
+          displayManualCheckDetails(checkDetails);
+        } catch (error) {
+          console.error('Error processing check details:', error);
+        }
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  } else {
     const img = new Image();
     img.onload = async function() {
       const canvas = document.createElement('canvas');
@@ -417,10 +406,7 @@ processImageButton.addEventListener('click', async () => {
       ctx?.drawImage(img, 0, 0);
 
       const imageData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
-      let mat = cv.matFromImageData(imageData!);
-      // You can apply similar preprocessing steps here if needed
-      // mat = preprocessImage(mat);
-
+      mat = cv.matFromImageData(imageData!);
       try {
         const checkDetails = await scanImage(checkMgr, mat);
         displayManualCheckDetails(checkDetails);
@@ -428,9 +414,8 @@ processImageButton.addEventListener('click', async () => {
         console.error('Error processing check details:', error);
       }
     };
-    img.src = event.target?.result as string;
-  };
-  reader.readAsDataURL(file);
+    img.src = generatedCheckImageUrl;
+  }
 });
 
 function displayManualCheckDetails(details: CheckDetails) {
@@ -439,4 +424,62 @@ function displayManualCheckDetails(details: CheckDetails) {
   document.getElementById('manualCheckNumber')!.textContent = details.checkNumber;
 }
 
-initializeAndStart();
+async function generateCheckImage(): Promise<string> {
+  const width = 600;
+  const height = 250;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+
+  if (!ctx) {
+    throw new Error('Failed to get 2D context');
+  }
+
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, width, height);
+
+  const font = new FontFace('MICR', 'url(GnuMICR.ttf)');
+  await font.load();
+  (document.fonts as any).add(font);
+  ctx.font = '16px MICR';
+
+  const [routingNumber, accountNumber, checkNumber] = generateRandomCheckDetails();
+
+  const micrLine = `A${routingNumber}A  ${accountNumber}C  ${checkNumber}`;
+  ctx.fillStyle = 'black';
+  ctx.fillText(micrLine, 10, height - 25);
+
+  return canvas.toDataURL('image/png');
+}
+
+const generateCheckButton = document.getElementById('generateCheckButton') as HTMLButtonElement;
+const generatedCheckImage = document.getElementById('generatedCheckImage') as HTMLImageElement;
+
+generateCheckButton.addEventListener('click', async () => {
+  try {
+    const checkImageUrl = await generateCheckImage();
+    generatedCheckImage.src = checkImageUrl;
+  } catch (error) {
+    console.error('Error generating check image:', error);
+  }
+});
+
+function generateRandomCheckDetails(): [string, string, string] {
+    const routingNumber = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10)).join('');
+    const accountNumber = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10)).join('');
+    const checkNumber = Array.from({ length: 4 }, () => Math.floor(Math.random() * 10)).join('');
+    return [routingNumber, accountNumber, checkNumber];
+}
+
+
+//initializeAndStart();
+async function initialize() {
+  checkMgr = await ocr.CheckMgr.setInstance({ config: { translators: 'opencv', logLevel: 'info' } });
+  console.log('CheckMgr initialized.');
+  generatedCheckImageUrl = await generateCheckImage();
+  generatedCheckImage.src = generatedCheckImageUrl;
+}
+
+initialize();
