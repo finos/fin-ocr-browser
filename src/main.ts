@@ -197,7 +197,7 @@ async function generateCheckImage(): Promise<string> {
     if (!ctx) {
         throw new Error('Failed to get 2D context');
     }
-
+    const [routingNumber, accountNumber, checkNumber] = generateRandomCheckDetails();
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = '#000000';
@@ -208,25 +208,31 @@ async function generateCheckImage(): Promise<string> {
     ctx.fillText('FIN-OCR Bank', 20, 40);
 
     ctx.font = 'bold 16px Arial';
-    ctx.fillText('Check No. 1234', width - 150, 40);
+    ctx.fillText('Check No. '+checkNumber, width - 150, 40);
 
+    const today = new Date();
+     const formattedDate = today.toLocaleDateString('en-US', {
+         month: '2-digit',
+         day: '2-digit',
+         year: 'numeric',
+     });
     ctx.font = '16px Arial';
     ctx.fillText('Date:', width - 160, 70);
-    ctx.fillText('08/19/2024', width - 120, 70); // Placeholder date
+    ctx.fillText(formattedDate, width - 120, 70);
 
     ctx.fillText('Pay to the Order of:', 20, 100);
     ctx.fillText('', 200, 100);
     ctx.fillRect(180, 105, 350, 2);
 
     ctx.fillText('Signature:', width - 200, height - 50);
-    ctx.fillRect(width - 120, height - 55, 100, 2); // Line for signature
+    ctx.fillRect(width - 120, height - 55, 100, 2);
 
     const font = new FontFace('MICR', 'url(GnuMICR.ttf)');
     await font.load();
     document.fonts.add(font);
     ctx.font = '16px MICR';
 
-    const [routingNumber, accountNumber, checkNumber] = generateRandomCheckDetails();
+
     const micrLine = `A${routingNumber}A  ${accountNumber}C  ${checkNumber}`;
     ctx.fillStyle = 'black';
     ctx.fillText(micrLine, 20, height - 25);
