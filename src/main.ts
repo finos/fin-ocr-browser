@@ -28,37 +28,12 @@ document.querySelector < HTMLDivElement > ('#app') !.innerHTML = `
   <!-- Main Content -->
   <main class="container mx-auto mt-8 px-4">
     <section class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-      <!-- Manual OCR Processing Column -->
-      <div class="bg-slate-100 p-6 rounded-lg shadow-lg">
-        <h2 class="mb-4 text-2xl font-semibold">Demo: Check Image OCR Analysis</h2>
-        <p class="mb-4">Upload a check image directly to extract MICR data using the <a href="https://github.com/discoverfinancial/fin-ocr-sdk" class="text-blue-600 underline">fin-ocr-sdk</a>. This process runs in the browser, so your image data will remain on your device.</p>
-        <div class="flex flex-col">
-          <input type="file" id="manualFileInput" class="mb-4 block w-full rounded border border-gray-300 p-2" />
-          <button id="manualProcessImageButton" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">Extract MICR Data</button>
-        </div>
-        <div id="manualOcrOutput" class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <h3 class="text-xl font-semibold">OpenCV Results</h3>
-            <p><strong>Routing Number:</strong> <span id="manualOpencvRoutingNumber">N/A</span></p>
-            <p><strong>Account Number:</strong> <span id="manualOpencvAccountNumber">N/A</span></p>
-            <p><strong>Check Number:</strong> <span id="manualOpencvCheckNumber">N/A</span></p>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold">Tesseract Results</h3>
-            <p><strong>Routing Number:</strong> <span id="manualTesseractRoutingNumber">N/A</span></p>
-            <p><strong>Account Number:</strong> <span id="manualTesseractAccountNumber">N/A</span></p>
-            <p><strong>Check Number:</strong> <span id="manualTesseractCheckNumber">N/A</span></p>
-          </div>
-        </div>
-      </div>
 
-      <!-- Check Image Generation Column -->
       <div class="bg-slate-100 p-6 rounded-lg shadow-lg">
-        <h2 class="mb-4 text-2xl font-semibold">Demo 2: Analyze Generated Check Image</h2>
+        <h2 class="mb-4 text-2xl font-semibold">Analyze Generated Check Image</h2>
         <p class="mb-4">Generate a simulated check image and run OCR to extract critical MICR data. </p>
         <div class="flex flex-col">
-          <button id="generateCheckButton" class="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700">Generate Check Image</button>
-          <button id="generatedProcessImageButton" class="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">Extract MICR Data</button>
+          <button id="generateCheckButton" class="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700">Generate New Check Image</button>
         </div>
         <div id="generatedCheckImageContainer" class="mt-6">
           <h3 class="mb-2 text-xl font-semibold">Generated Check Image</h3>
@@ -79,8 +54,68 @@ document.querySelector < HTMLDivElement > ('#app') !.innerHTML = `
           </div>
         </div>
       </div>
+      <div class="bg-slate-100 p-6 rounded-lg shadow-lg">
+      <h2 class="mb-4 text-2xl font-semibold">Run OCR on Your Own Check Images</h2>
+        <p class="mb-4">Upload a check image directly to extract MICR data using the <a href="https://github.com/discoverfinancial/fin-ocr-sdk" class="text-blue-600 underline">fin-ocr-sdk</a>. This process runs in the browser, so your image data will remain on your device.</p>
+        <div class="bg-[#cff4fc] border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
+          <strong class="font-bold">Notice:</strong>
+          <span class="block sm:inline text-[#055160]">This process runs in the browser, so your image data will remain on your device.</span>
+        </div>
+
+        <div class="flex flex-col pt-6">
+          <input type="file" id="manualFileInput" class="mb-4 block w-full rounded border border-gray-300 p-2" />
+        </div>
+        <div id="manualOcrOutput" class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <h3 class="text-xl font-semibold">OpenCV Results</h3>
+            <p><strong>Routing Number:</strong> <span id="manualOpencvRoutingNumber">N/A</span></p>
+            <p><strong>Account Number:</strong> <span id="manualOpencvAccountNumber">N/A</span></p>
+            <p><strong>Check Number:</strong> <span id="manualOpencvCheckNumber">N/A</span></p>
+          </div>
+          <div>
+            <h3 class="text-xl font-semibold">Tesseract Results</h3>
+            <p><strong>Routing Number:</strong> <span id="manualTesseractRoutingNumber">N/A</span></p>
+            <p><strong>Account Number:</strong> <span id="manualTesseractAccountNumber">N/A</span></p>
+            <p><strong>Check Number:</strong> <span id="manualTesseractCheckNumber">N/A</span></p>
+          </div>
+        </div>
+      </div>
     </section>
-    -->
+    <!--
+        <section class="rounded-lg bg-slate-100 p-6 shadow-lg">
+          <h2 class="mb-4 text-2xl font-semibold">Check Scanner Simulation</h2>
+          <p class="mb-4">Capture video input from your device's webcam and simulate check scanning behavior.</p>
+          <div class="flex flex-col items-center">
+            <div class="w-full sm:w-2/3">
+              <div class="flex justify-center">
+                  <video id="videoInput" width="640" height="480" class="bg-gray-200 border border-gray-300 rounded-lg" autoplay></video>
+                  <canvas id="canvasOutput" width="640" height="480" class="bg-gray-200 border border-gray-300 rounded-lg ml-4"></canvas>
+              </div>
+            </div>
+            <div class="mt-4 w-full sm:w-2/3">
+              <div class="flex flex-col items-center justify-center sm:flex-row">
+                <div class="w-full p-2 sm:w-1/2">
+                  <label for="brightness" class="block text-center">Brightness:</label>
+                  <input type="range" id="brightness" name="brightness" min="-100" max="100" value="0" class="w-full" />
+                </div>
+                <div class="w-full p-2 sm:w-1/2">
+                  <label for="contrast" class="block text-center">Contrast:</label>
+                  <input type="range" id="contrast" name="contrast" min="-100" max="100" value="0" class="w-full" />
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 flex w-full justify-center sm:w-2/3">
+              <button id="resetButton" class="mx-2 rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700">Reset</button>
+              <button id="ocrButton" class="mx-2 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">Run OCR</button>
+            </div>
+          </div>
+          <div id="output" class="mt-6">
+            <p><strong>Routing Number:</strong> <span id="routingNumber">N/A</span></p>
+            <p><strong>Account Number:</strong> <span id="accountNumber">N/A</span></p>
+            <p><strong>Check Number:</strong> <span id="checkNumber">N/A</span></p>
+          </div>
+        </section>
+        -->
   </main>
 
   <footer class="mt-8 bg-gray-800 py-4 text-white">
@@ -143,7 +178,7 @@ let usingUserImage = false;
 fileInput.addEventListener('change', () => {
     const file = fileInput.files?.[0];
     if (file) {
-        usingUserImage = true; // Mark that the user image is being used
+        usingUserImage = true;
         const reader = new FileReader();
         reader.onload = function(event) {
             const img = new Image();
@@ -154,19 +189,28 @@ fileInput.addEventListener('change', () => {
                 const ctx = canvas.getContext('2d');
                 ctx?.drawImage(img, 0, 0);
 
-                // Display the user's image on the canvas
-                const canvasContext = document.getElementById('canvasOutput')?.getContext('2d');
+                const canvasContext = (document.getElementById('canvasOutput') as HTMLCanvasElement)?.getContext('2d');
                 if (canvasContext) {
                     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
                     canvasContext.drawImage(img, 0, 0, canvas.width, canvas.height);
                 }
-
-                // Optionally store this image in capturedFrame for processing
                 capturedFrame = cv.matFromImageData(ctx?.getImageData(0, 0, canvas.width, canvas.height)!);
             };
             img.src = event.target?.result as string;
         };
         reader.readAsDataURL(file);
+        processImage(fileInput as HTMLInputElement, {
+            tesseract: {
+                routingNumber: 'manualTesseractRoutingNumber',
+                accountNumber: 'manualTesseractAccountNumber',
+                checkNumber: 'manualTesseractCheckNumber'
+            },
+            opencv: {
+                routingNumber: 'manualOpencvRoutingNumber',
+                accountNumber: 'manualOpencvAccountNumber',
+                checkNumber: 'manualOpencvCheckNumber'
+            }
+        });
     }
 });
 
@@ -227,7 +271,7 @@ async function generateCheckImage(): Promise<string> {
     ctx.fillText('Signature:', width - 200, height - 50);
     ctx.fillRect(width - 120, height - 55, 100, 2);
 
-    const font = new FontFace('MICR', 'url(GnuMICR.ttf)');
+    const font = new FontFace('MICR', 'url(micr.ttf)');
     await font.load();
     document.fonts.add(font);
     ctx.font = '16px MICR';
@@ -247,11 +291,45 @@ let currentProcessImageListener: () => void;
 generateCheckButton.addEventListener('click', async () => {
     try {
       const newCheckImageUrl = await generateCheckImage();
-              updateGeneratedCheckImage(newCheckImageUrl);
+      updateGeneratedCheckImage(newCheckImageUrl);
+        await processGeneratedImage();
     } catch (error) {
         console.error('Error generating check image:', error);
     }
 });
+
+async function processGeneratedImage() {
+    const img = new Image();
+    img.onload = async function () {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0);
+
+        const imageData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
+        const mat = cv.matFromImageData(imageData!);
+
+        try {
+            const scanResults = await scanImage(checkMgr, mat);
+            displayCheckDetails(scanResults, {
+                tesseract: {
+                    routingNumber: 'generatedTesseractRoutingNumber',
+                    accountNumber: 'generatedTesseractAccountNumber',
+                    checkNumber: 'generatedTesseractCheckNumber'
+                },
+                opencv: {
+                    routingNumber: 'generatedOpencvRoutingNumber',
+                    accountNumber: 'generatedOpencvAccountNumber',
+                    checkNumber: 'generatedOpencvCheckNumber'
+                }
+            });
+        } catch (error) {
+            console.error('Error processing check details:', error);
+        }
+    };
+    img.src = generatedCheckImageUrl;
+}
 
 function generateRandomCheckDetails(): [string, string, string] {
     const routingNumber = Array.from({
@@ -274,7 +352,8 @@ async function initialize() {
     });
     console.log('CheckMgr initialized.');
     const generatedCheckImageUrl = await generateCheckImage();
-     updateGeneratedCheckImage(generatedCheckImageUrl);
+    updateGeneratedCheckImage(generatedCheckImageUrl);
+    await processGeneratedImage();
     attachEventListeners();
 }
 
@@ -286,58 +365,13 @@ function updateGeneratedCheckImage(checkImageUrl: string) {
 
 function attachEventListeners() {
     const manualFileInput = document.getElementById('manualFileInput') as HTMLInputElement;
-    const generatedProcessImageButton = document.getElementById('generatedProcessImageButton') as HTMLButtonElement;
-    const manualProcessImageButton = document.getElementById('manualProcessImageButton') as HTMLButtonElement;
-    manualProcessImageButton.addEventListener('click', processManualImage);
-    generatedProcessImageButton.addEventListener('click', processGeneratedImage);
+
 
     function processManualImage() {
-        processImage(document.getElementById('manualFileInput') as HTMLInputElement, {
-            tesseract: {
-                routingNumber: 'manualTesseractRoutingNumber',
-                accountNumber: 'manualTesseractAccountNumber',
-                checkNumber: 'manualTesseractCheckNumber'
-            },
-            opencv: {
-                routingNumber: 'manualOpencvRoutingNumber',
-                accountNumber: 'manualOpencvAccountNumber',
-                checkNumber: 'manualOpencvCheckNumber'
-            }
-        });
+
     }
 
-    async function processGeneratedImage() {
-        const img = new Image();
-        img.onload = async function () {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx?.drawImage(img, 0, 0);
 
-            const imageData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
-            const mat = cv.matFromImageData(imageData!);
-
-            try {
-                const scanResults = await scanImage(checkMgr, mat);
-                displayCheckDetails(scanResults, {
-                    tesseract: {
-                        routingNumber: 'generatedTesseractRoutingNumber',
-                        accountNumber: 'generatedTesseractAccountNumber',
-                        checkNumber: 'generatedTesseractCheckNumber'
-                    },
-                    opencv: {
-                        routingNumber: 'generatedOpencvRoutingNumber',
-                        accountNumber: 'generatedOpencvAccountNumber',
-                        checkNumber: 'generatedOpencvCheckNumber'
-                    }
-                });
-            } catch (error) {
-                console.error('Error processing check details:', error);
-            }
-        };
-        img.src = generatedCheckImageUrl;
-    }
 }
 
 async function processImage(fileInput: HTMLInputElement, outputIds: { tesseract: { routingNumber: string, accountNumber: string, checkNumber: string }, opencv: { routingNumber: string, accountNumber: string, checkNumber: string } }) {
