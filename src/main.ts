@@ -185,7 +185,7 @@ function displayManualCheckDetails(results: ScanResults) {
   }
 }
 
-async function generateCheckImage(): Promise < string > {
+async function generateCheckImage(): Promise<string> {
     const width = 600;
     const height = 250;
 
@@ -200,30 +200,48 @@ async function generateCheckImage(): Promise < string > {
 
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#000000';
+    ctx.strokeRect(10, 10, width - 20, height - 20);
+
+    ctx.fillStyle = '#000000';
+    ctx.font = 'bold 18px Arial';
+    ctx.fillText('FIN-OCR Bank', 20, 40);
+
+    ctx.font = 'bold 16px Arial';
+    ctx.fillText('Check No. 1234', width - 150, 40);
+
+    ctx.font = '16px Arial';
+    ctx.fillText('Date:', width - 160, 70);
+    ctx.fillText('08/19/2024', width - 120, 70); // Placeholder date
+
+    ctx.fillText('Pay to the Order of:', 20, 100);
+    ctx.fillText('', 200, 100);
+    ctx.fillRect(180, 105, 350, 2);
+
+    ctx.fillText('Signature:', width - 200, height - 50);
+    ctx.fillRect(width - 120, height - 55, 100, 2); // Line for signature
 
     const font = new FontFace('MICR', 'url(GnuMICR.ttf)');
     await font.load();
-    (document.fonts as any).add(font);
+    document.fonts.add(font);
     ctx.font = '16px MICR';
 
     const [routingNumber, accountNumber, checkNumber] = generateRandomCheckDetails();
-
     const micrLine = `A${routingNumber}A  ${accountNumber}C  ${checkNumber}`;
     ctx.fillStyle = 'black';
-    ctx.fillText(micrLine, 10, height - 25);
+    ctx.fillText(micrLine, 20, height - 25);
 
     return canvas.toDataURL('image/png');
 }
+
 
 const generateCheckButton = document.getElementById('generateCheckButton') as HTMLButtonElement;
 const generatedCheckImage = document.getElementById('generatedCheckImage') as HTMLImageElement;
 let currentProcessImageListener: () => void;
 generateCheckButton.addEventListener('click', async () => {
     try {
-        const checkImageUrl = await generateCheckImage();
-        generatedCheckImage.src = checkImageUrl;
-        generatedCheckImageUrl = checkImageUrl;
-        attachProcessImageListener();
+      const newCheckImageUrl = await generateCheckImage();
+              updateGeneratedCheckImage(newCheckImageUrl);
     } catch (error) {
         console.error('Error generating check image:', error);
     }
@@ -250,16 +268,25 @@ async function initialize() {
     });
     console.log('CheckMgr initialized.');
     const generatedCheckImageUrl = await generateCheckImage();
-    const generatedCheckImage = document.getElementById('generatedCheckImage') as HTMLImageElement;
-    generatedCheckImage.src = generatedCheckImageUrl;
-    attachEventListeners(generatedCheckImageUrl);
+     updateGeneratedCheckImage(generatedCheckImageUrl);
+    attachEventListeners();
 }
-function attachEventListeners(generatedCheckImageUrl: string) {
-    const manualFileInput = document.getElementById('manualFileInput') as HTMLInputElement;
-    const manualProcessImageButton = document.getElementById('manualProcessImageButton') as HTMLButtonElement;
 
-    manualProcessImageButton.addEventListener('click', () => {
-        processImage(manualFileInput, {
+function updateGeneratedCheckImage(checkImageUrl: string) {
+    const generatedCheckImage = document.getElementById('generatedCheckImage') as HTMLImageElement;
+    generatedCheckImage.src = checkImageUrl;
+    generatedCheckImageUrl = checkImageUrl;
+}
+
+function attachEventListeners() {
+    const manualFileInput = document.getElementById('manualFileInput') as HTMLInputElement;
+    const generatedProcessImageButton = document.getElementById('generatedProcessImageButton') as HTMLButtonElement;
+    const manualProcessImageButton = document.getElementById('manualProcessImageButton') as HTMLButtonElement;
+    manualProcessImageButton.addEventListener('click', processManualImage);
+    generatedProcessImageButton.addEventListener('click', processGeneratedImage);
+
+    function processManualImage() {
+        processImage(document.getElementById('manualFileInput') as HTMLInputElement, {
             tesseract: {
                 routingNumber: 'manualTesseractRoutingNumber',
                 accountNumber: 'manualTesseractAccountNumber',
@@ -271,10 +298,9 @@ function attachEventListeners(generatedCheckImageUrl: string) {
                 checkNumber: 'manualOpencvCheckNumber'
             }
         });
-    });
+    }
 
-    const generatedProcessImageButton = document.getElementById('generatedProcessImageButton') as HTMLButtonElement;
-    generatedProcessImageButton.addEventListener('click', async () => {
+    async function processGeneratedImage() {
         const img = new Image();
         img.onload = async function () {
             const canvas = document.createElement('canvas');
@@ -305,7 +331,7 @@ function attachEventListeners(generatedCheckImageUrl: string) {
             }
         };
         img.src = generatedCheckImageUrl;
-    });
+    }
 }
 
 async function processImage(fileInput: HTMLInputElement, outputIds: { tesseract: { routingNumber: string, accountNumber: string, checkNumber: string }, opencv: { routingNumber: string, accountNumber: string, checkNumber: string } }) {
