@@ -30,9 +30,9 @@ document.querySelector < HTMLDivElement > ('#app') !.innerHTML = `
     <section class="grid grid-cols-1 sm:grid-cols-2 gap-8">
       <!-- Manual OCR Processing Column -->
       <div class="bg-slate-100 p-6 rounded-lg shadow-lg">
-        <h2 class="mb-4 text-2xl font-semibold">Check Image OCR Analysis</h2>
-        <p class="mb-4">Upload a check image directly to extract MICR data using the <a href="https://github.com/discoverfinancial/fin-ocr-sdk" class="text-blue-600 underline">fin-ocr-sdk</a>.</p>
-        <div class="flex flex-col items-center">
+        <h2 class="mb-4 text-2xl font-semibold">Demo: Check Image OCR Analysis</h2>
+        <p class="mb-4">Upload a check image directly to extract MICR data using the <a href="https://github.com/discoverfinancial/fin-ocr-sdk" class="text-blue-600 underline">fin-ocr-sdk</a>. This process runs in the browser, so your image data will remain on your device.</p>
+        <div class="flex flex-col">
           <input type="file" id="manualFileInput" class="mb-4 block w-full rounded border border-gray-300 p-2" />
           <button id="manualProcessImageButton" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">Extract MICR Data</button>
         </div>
@@ -54,9 +54,9 @@ document.querySelector < HTMLDivElement > ('#app') !.innerHTML = `
 
       <!-- Check Image Generation Column -->
       <div class="bg-slate-100 p-6 rounded-lg shadow-lg">
-        <h2 class="mb-4 text-2xl font-semibold">Generate and Analyze Check Image</h2>
+        <h2 class="mb-4 text-2xl font-semibold">Demo 2: Analyze Generated Check Image</h2>
         <p class="mb-4">Generate a simulated check image and run OCR to extract critical MICR data. </p>
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col">
           <button id="generateCheckButton" class="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700">Generate Check Image</button>
           <button id="generatedProcessImageButton" class="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">Extract MICR Data</button>
         </div>
