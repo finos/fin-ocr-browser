@@ -271,7 +271,7 @@ async function generateCheckImage(): Promise<string> {
     ctx.fillText('Signature:', width - 200, height - 50);
     ctx.fillRect(width - 120, height - 55, 100, 2);
 
-    const font = new FontFace('MICR', 'url(micr.ttf)');
+    const font = new FontFace('MICR', 'url(GnuMICR.ttf)');
     await font.load();
     document.fonts.add(font);
     ctx.font = '16px MICR';
