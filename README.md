@@ -26,8 +26,8 @@ Ensure you have the following installed on your system:
 Clone both the SDK and the demo application repositories:
 
 ```bash
-git clone https://github.com/discoverfinancial/fin-ocr-sdk.git
-git clone https://github.com/discoverfinancial/fin-ocr-browser.git
+git clone https://github.com/finos/fin-ocr-sdk.git
+git clone https://github.com/finos/fin-ocr-browser.git
 ```
 
 ### 2. Build and Link the SDK
@@ -87,7 +87,7 @@ Next, navigate to the fin-ocr-browser directory and run the following commands t
 
 ```bash
 cd ../fin-ocr-browser
-npm link @discoverfinancial/fin-ocr-sdk
+npm link @finos/fin-ocr-sdk
 npm run build
 ```
 
