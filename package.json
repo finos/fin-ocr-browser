@@ -3,15 +3,20 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "license": "Apache-2.0",
   "scripts": {
     "dev": "vite",
     "build": "npm i && tsc && vite build",
     "deploy": "vite build && gh-pages -d dist",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "scan": "auditjs ossi",
+    "scan-license": "node-license-validator . --allow-licenses Apache-2.0 MIT BSD-2-Clause BSD BSD-3-Clause Unlicense"
   },
   "devDependencies": {
+    "auditjs": "^4.0.46",
     "autoprefixer": "^10.4.20",
     "gh-pages": "^6.1.1",
+    "node-license-validator": "^1.3.2",
     "postcss": "^8.4.41",
     "tailwindcss": "^3.4.9",
     "typescript": "^5.2.2",

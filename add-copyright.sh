@@ -1,6 +1,6 @@
 #!/bin/bash
 
-HEADER_TEXT='Copyright (c) 2024 Discover Financial Services'
+HEADER_TEXT='Copyright (c) 2024 Capital One'
 HEADER_SHELL="# $HEADER_TEXT"
 HEADER_PYTHON='"""
 '"$HEADER_TEXT"'

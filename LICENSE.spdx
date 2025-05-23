@@ -1,0 +1,7 @@
+SPDXVersion: SPDX-2.0
+DataLicense: CC0-1.0
+Creator: Capital One
+PackageName: fin-ocr-browser
+PackageOriginator: Capital One
+PackageHomePage: https://github.com/finos/fin-ocr-browser
+PackageLicenseDeclared: Apache-2.0

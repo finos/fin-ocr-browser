@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2024 Discover Financial Services
+ * Copyright (c) 2024 Capital One
  */
 import './style.css';
 import cv from '@techstark/opencv-js';
@@ -120,7 +120,7 @@ document.querySelector < HTMLDivElement > ('#app') !.innerHTML = `
 
   <footer class="mt-8 bg-gray-800 py-4 text-white">
     <div class="container mx-auto px-4 text-center">
-      <p>&copy; 2024 Discover Financial Services</p>
+      <p>&copy; 2024 Capital One</p>
     </div>
   </footer>
 `;
