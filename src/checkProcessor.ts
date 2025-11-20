@@ -2,7 +2,7 @@
  * Copyright (c) 2024 Capital One
 */
 import cv from '@techstark/opencv-js';
-import * as ocr from "@discoverfinancial/fin-ocr-sdk";
+import * as ocr from "@finos/fin-ocr-sdk";
 import { decode } from 'base64-arraybuffer-es6';
 
 export interface CheckDetails {
