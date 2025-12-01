@@ -3,7 +3,7 @@
  */
 import './style.css';
 import cv from '@techstark/opencv-js';
-import * as ocr from "@discoverfinancial/fin-ocr-sdk";
+import * as ocr from "@finos/fin-ocr-sdk";
 import {
     scanImage,
     ScanResults

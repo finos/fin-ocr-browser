@@ -23,7 +23,7 @@
     "vite": "^5.3.6"
   },
   "dependencies": {
-    "@discoverfinancial/fin-ocr-sdk": "*",
+    "@finos/fin-ocr-sdk": "^1.0.4",
     "@techstark/opencv-js": "^4.9.0-release.3",
     "base64-arraybuffer-es6": "^3.1.0",
     "jimp": "^0.22.10",
